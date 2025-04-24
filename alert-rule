@@ -1,0 +1,20 @@
+groups:
+- name: example
+  rules:
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High memory usage on {{ $labels.instance }}"
+      description: "Memory available is less than 10% on {{ $labels.instance }}"
+
+  - alert: ContainerCpuUsage
+    expr: (sum(rate(container_cpu_usage_seconds_total[1m])) by (name) * 100) > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High CPU usage in container {{ $labels.name }}"
+      description: "Container {{ $labels.name }} is using more than 80% CPU"
